@@ -75,7 +75,47 @@ Arguments:
  */
 function computeInput(depth, transcript, nullifier) {
     // TODO
-    return {};
+    var tree = new SparseMerkleTree(depth);
+    var selectednode;
+    var selectnonce;
+    for (let i = 0; i < transcript.length; i++) {
+      var hash;
+      if(transcript[i].length == 1) {
+        hash = transcript[i][0];
+      } else {
+        hash = mimc2(transcript[i][0], transcript[i][1]);
+      }
+
+      if(transcript[i][0] == nullifier) {
+        selectednode = hash;
+        selectnonce = transcript[i][1];
+      }
+
+      tree.insert(hash);
+    }
+
+    var digest = tree.digest;
+    var path = tree.path(selectednode);
+    const mainmap = new Map();
+    mainmap.set("digest", digest);
+    mainmap.set("nullifier", nullifier);
+    mainmap.set("nonce", selectnonce);
+
+
+    for(let i = 0; i < path[0].length; ++i) {
+      const sibling = path[0][i];
+      var sibstring = "sibling[" + i + "]";
+      mainmap.set(sibstring, sibling);
+    }
+
+    for(let i = 0; i < path[1].length; ++i) {
+      const direction = path[1][i];
+      var dirstring = "direction[" + i + "]";
+      mainmap.set(dirstring, direction);
+    }
+
+
+    return mainmap;
 }
 
 module.exports = { computeInput };
