@@ -115,4 +115,4 @@ template SmallOddFactorization(n, b) {
 
 // Finally, we set the `main` circuit for this file, which is the circuit that
 // `circom` will synthesize.
-component main = SmallOddFactorization(3, 8);
+component main = SmallOddFactorization(3, 16);

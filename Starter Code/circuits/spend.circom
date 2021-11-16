@@ -12,9 +12,15 @@ template IfThenElse() {
     signal input true_value;
     signal input false_value;
     signal output out;
+    signal intermeda;
+    signal intermedb;
 
     // TODO
     // Hint: You will need a helper signal...
+    condition * (1 - condition) === 0;
+    intermeda <== condition * true_value;
+    intermedb <== (1 - condition) * false_value;
+    out <== intermeda + intermedb;
 }
 
 /*
@@ -32,6 +38,20 @@ template SelectiveSwitch() {
     signal output out1;
 
     // TODO
+    component checker1 = IfThenElse();
+    component checker2 = IfThenElse();
+    checker1.condition <== s;
+    checker2.condition <== s;
+
+    checker1.out <== out0;
+    checker2.out <== out1;
+
+    checker1.true_value <== in1;
+    checker1.false_value <== in0;
+
+    checker2.true_value <== in0;
+    checker2.false_value <== in1;
+    
 }
 
 /*
