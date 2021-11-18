@@ -95,23 +95,19 @@ function computeInput(depth, transcript, nullifier) {
     }
 
     var digest = tree.digest;
-    var path = tree.path(selectednode);
-    const mainmap = new Map();
-    mainmap.set("digest", digest);
-    mainmap.set("nullifier", nullifier);
-    mainmap.set("nonce", selectnonce);
+    var path = tree.path(mimc2(nullifier,selectnonce));
+    const mainmap = {
+      "digest": digest,
+      "nullifier": nullifier,
+      "nonce": selectnonce,
+    };
 
-
-    for(let i = 0; i < path[0].length; ++i) {
-      const sibling = path[0][i];
+    for(let i = 0; i < path.length; ++i) {
+      const [sibling, direction] = path[i];
       var sibstring = "sibling[" + i + "]";
-      mainmap.set(sibstring, sibling);
-    }
-
-    for(let i = 0; i < path[1].length; ++i) {
-      const direction = path[1][i];
+      mainmap[sibstring] = sibling;
       var dirstring = "direction[" + i + "]";
-      mainmap.set(dirstring, direction);
+      mainmap[dirstring] = (0 + direction).toString();
     }
 
 
